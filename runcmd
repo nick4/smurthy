@@ -1,0 +1,35 @@
+curl -O http://download.tensorflow.org/example_images/flower_photos.tgz
+tar xzf flower_photos.tgz
+bazel build tensorflow/examples/image_retraining:retrain
+bazel build tensorflow/examples/label_image:label_image
+
+bazel-bin/tensorflow/examples/label_image/label_image \
+--graph=/home/murthys/Desktop/tensorflow/image_retrain/output_graph.pb --labels=/home/murthys/Desktop/tensorflow/image_retrain/output_labels.txt \
+--output_layer=final_result \
+--image=/home/murthys/Desktop/tensorflow/image_retrain/flower_photos/roses/99383371_37a5ac12a3_n.jpg
+
+retrain:
+bazel-bin/tensorflow/examples/image_retraining/retrain --image_dir /home/murthys/Desktop/tensorflow/image_retrain/flower_photos  --output_graph /home/murthys/Desktop/tensorflow/image_retrain/output_graph.pb --output_labels /home/murthys/Desktop/tensorflow/image_retrain/output_labels.txt --bottleneck_dir /home/murthys/Desktop/tensorflow/image_retrain/bottleneck
+
+https://www.tensorflow.org/how_tos/image_retraining/
+https://github.com/eldor4do/TensorFlow-Examples/blob/master/retraining-example.py
+
+retrain with python:
+python tensorflow/examples/image_retraining/retrain.py \
+--bottleneck_dir=/home/murthys/Desktop/tensorflow/image_retrain/bottleneck \
+--how_many_training_steps 4000 \
+--model_dir=//home/murthys/Desktop/tensorflow/image_retrain/inception \
+--output_graph=/home/murthys/Desktop/tensorflow/image_retrain/output_graph.pb \
+--output_labels=/home/murthys/Desktop/tensorflow/image_retrain/output_labels.txt \
+--image_dir /home/murthys/Desktop/tensorflow/image_retrain/flower_photos
+
+python label_image.py /home/murthys/Desktop/tensorflow/image_retrain/flower_photos/roses/2414954629_3708a1a04d.jpg 
+
+
+https://codelabs.developers.google.com/codelabs/tensorflow-for-poets
+https://tensorflow.github.io/serving/serving_inception
+
+/home/murthys/Desktop/tensorflow/image_retrain/inception
+bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_name=inception --model_base_path=/home/murthys/Desktop/tensorflow/image_retrain/inception
+
+
